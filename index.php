@@ -1,3 +1,6 @@
+<?php
+$search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS);
+?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
  "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -30,93 +33,38 @@ h3{margin:0 0 .2em 0}
 <div id="doc" class="yui-t7">
   <div id="hd" role="banner"><h1>GooHooBi</h1></div>
   <div id="bd" role="main">
-    <form action="" method="post" id="mainform">
+    <form action="index.php" method="get" id="mainform">
       <div>
         <label for="search">Search:</label>
-        <input type="text" id="search" name="search">
+        <input type="text" id="search" name="search" value="<?php echo $search;?>">
         <input type="submit" value="Go!">
       </div>
     </form>
     <p class="info">GooHooBi allows you to search Google, Yahoo and Bing in one go. Simply add your search term above and hit the Go button.</p>
-       <div class="yui-gb">
-         <div class="yui-u first" id="google"></div>
-         <div class="yui-u" id="yahoo"></div>
-         <div class="yui-u" id="bing"></div>
-       </div>
+    <div id="results">
+    <?php if(isset($_GET['search'])){
+      include('goohoobi.php');
+    }?>
+    </div>
   </div>
   <div id="ft" role="contentinfo"><p>Written by <a href="http://wait-till-i.con">Chris Heilmann</a>, powered by <a href="http://developer.yahoo.com/yui">YUI</a> and <a href="http://developer.yahoo.com/yql/console/?q=select%20*%20from%20query.multi%20where%20queries%3D%27select%20Title%2CDescription%2CUrl%2CDisplayUrl%20from%20microsoft.bing.web%20where%20query%3D%22css%20site%3Await-till-i.com%22%3Bselect%20title%2Cclickurl%2Cabstract%2Cdispurl%20from%20search.web%20where%20query%20%3D%20%22pizza%20%20site%3Await-till-i.com%22%3Bselect%20titleNoFormatting%2Curl%2Ccontent%2CvisibleUrl%20from%20google.search%20where%20q%20%3D%20%22pizza%20site%3Await-till-i.com%22%27&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys">YQL</a>.</p></div>
 </div>
 <script type="text/javascript" charset="utf-8">
 goohoobi = function(){
-  var bing = document.getElementById('bing');
-  var google = document.getElementById('google');
-  var yahoo = document.getElementById('yahoo');
+  var results = document.getElementById('results');
   function seed(o){
-    if(o.query.results.results[0]){
-    var res = o.query.results.results[0].WebResult;
-    var all = res.length;
-    var out = '<h2>Bing</h2><ul>';
-    for(var i=0;i<all;i++){      
-      out += '<li><h3><a href="'+res[i].Url+'">'+res[i].Title+'</a></h3><p>'+
-              res[i].Description+'<span>('+res[i].DisplayUrl+
-              ')</span></p></li>';
-    }
-    out += '</ul>';
-    bing.innerHTML = out;
-  } else {
-    bing.innerHTML = '<h2>Bing</h2><ul><li>\
-                      <h3>No results found. </h3></li></ul>';
-  };
-  if(o.query.results.results[1]){
-    var res = o.query.results.results[1].result;
-    var all = res.length;
-    var out = '<h2>Yahoo</h2><ul>';
-    for(var i=0;i<all;i++){
-      out += '<li><h3><a href="'+res[i].clickurl+'">'+res[i].title+
-             '</a></h3><p>'+res[i].abstract+'<span>('+res[i].dispurl+
-             ')</span></p></li>';
-    }
-    out += '</ul>';
-    yahoo.innerHTML = out;
-  }else{
-    yahoo.innerHTML = '<h2>Yahoo</h2><ul><li>\
-                       <h3>No results found. </h3></li></ul>';
-  }
-  if(o.query.results.results[2]){
-  
-    var res = o.query.results.results[2].results;
-    var all = res.length;
-    var out = '<h2>Google</h2><ul>';
-    for(var i=0;i<all;i++){
-      out += '<li><h3><a href="'+res[i].url+'">'+res[i].titleNoFormatting+
-             '</a></h3><p>'+res[i].content+'<span>('+res[i].visibleUrl+
-             ')</span></p></li>';
-    }
-    out += '</ul>';
-    google.innerHTML = out;
-  }else{
-    google.innerHTML = '<h2>Google</h2><ul><li>\
-                        <h3>No results found. </h3></li></ul>';
-  }
-
+    results.innerHTML = o.result;
   }
   function doSearch(){
-    google.innerHTML = '<h2>Google loading...</h2>';
-    bing.innerHTML = '<h2>Bing loading...</h2>';
-    yahoo.innerHTML = '<h2>Yahoo loading...</h2>';
+    results.innerHTML = '<div class="yui-gb">\
+      <div class="yui-u first" id="google">\
+      <h2>Google loading &hellip;</h2></div>\
+      <div class="yui-u" id="yahoo"><h2>Yahoo loading &hellip;</h2></div>\
+      <div class="yui-u" id="bing"><h2>Bing loading &hellip;</h2></div>\
+    </div>';
     var query = document.getElementById('search').value;
-    var url = 'select * from query.multi where queries=\'select '+
-              'Title,Description,Url,DisplayUrl from microsoft.bing.web(20) '+
-              'where query="'+query+'";select title,clickurl,abstract,'+
-              'dispurl from search.web(20) where query = "'+query+'";'+
-              'select titleNoFormatting,url,content,visibleUrl '+
-              'from google.search(20) where q = "'+query+'"\'';
-    var api ='http://query.yahooapis.com/v1/public/yql?q='+
-             encodeURIComponent(url)+'&format=json&env=store'+
-             '%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback='+
-             'goohoobi.se&diagnostics=false';
     var s = document.createElement('script');
-    s.setAttribute('src',api);
+    s.setAttribute('src','goohoobi.php?search='+query+'&json=true');
     document.getElementsByTagName('head')[0].appendChild(s);
   }
   document.getElementById('mainform').onsubmit = function(){
