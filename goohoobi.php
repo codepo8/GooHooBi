@@ -1,3 +1,4 @@
+<?php
 /*
   GooHooBi API by Christian Heilmann
   Homepage: http://github.com/codepo8/GooHooBi
@@ -5,21 +6,25 @@
   Code licensed under the BSD License:
   http://wait-till-i.com/license.txt
 */
+?>
 <?php if(isset($_GET['json'])){
   header('content-type:text/javascript');
   echo 'goohoobi.se({"result":"';
 }?>
 <?php if(isset($_GET['search'])){
 $query = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS);
-$url = 'select * from query.multi where queries=\'select '.
-            'Title,Description,Url,DisplayUrl from microsoft.bing.web(20) '.
-            'where query="'.$query.'";select title,clickurl,abstract,'.
-            'dispurl from search.web(20) where query = "'.$query.'";'.
-            'select titleNoFormatting,url,content,visibleUrl '.
-            'from google.search(20) where q = "'.$query.'"\'';
-$api ='http://query.yahooapis.com/v1/public/yql?q='.
-           urlencode($url).'&format=json&env=store'.
-           '%3A%2F%2Fdatatables.org%2Falltableswithkeys&diagnostics=false';
+
+$queries[] = 'select Title,Description,Url,DisplayUrl '.
+             'from microsoft.bing.web(20) where query="'.$query.'"';
+$queries[] = 'select title,clickurl,abstract,dispurl '.
+             'from search.web(20) where query = "'.$query.'"';
+$queries[] = 'select titleNoFormatting,url,content,visibleUrl '.
+             'from google.search(20) where q="'.$query.'"';
+$url = "select * from query.multi where queries='".join($queries,';')."'";
+$api = 'http://query.yahooapis.com/v1/public/yql?q='.
+       urlencode($url).'&format=json&env=store'.
+       '%3A%2F%2Fdatatables.org%2Falltableswithkeys&diagnostics=false';
+
 $ch = curl_init(); 
 curl_setopt($ch, CURLOPT_URL, $api); 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
