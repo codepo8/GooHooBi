@@ -1,4 +1,11 @@
 <?php
+/*
+  GooHooBi by Christian Heilmann
+  Homepage: http://github.com/codepo8/GooHooBi
+  Copyright (c)2009,2010 Christian Heilmann
+  Code licensed under the BSD License:
+  http://wait-till-i.com/license.txt
+*/
 $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
@@ -13,7 +20,7 @@ $search = filter_input(INPUT_GET, 'search', FILTER_SANITIZE_SPECIAL_CHARS);
 html,body{color:#fff;background:#222;font-family:calibri,verdana,arial,sans-serif;}
 h2{background:#369;padding:5px;color:#fff;font-weight:bold;-moz-box-shadow: 0px 4px 2px -2px #000;-moz-border-radius:5px;-webkit-border-radius:5px;text-shadow: #000 1px 1px;}
 h3 a{color:#69c;text-decoration:none;}
-form{font-size:150%;margin-top:-1.8em;}
+form{font-size:150%;margin-top:-3.2em;}
 h1{font-size:300%;margin:0;text-align:right;color:#3c3}
 ul,ul li{margin:0;padding:0;list-style:none;}
 p span{display:block;text-align:right;margin-top:.5em;font-size:90%;color:#999;}
@@ -30,11 +37,11 @@ input[type=submit]{-moz-border-radius:5px;-webkit-border-radius:5px;border:2px s
 h3{margin:0 0 .2em 0}
 #modeswitch{text-align:right;}
 #modeswitch a{color:#fff;}
+h2#resultsheader,h2#preview{background:#000;padding:2px 5px;color:#fff;margin:1em 0 0 0;font-weight:bold;-moz-box-shadow:none;-moz-border-radius:0;-webkit-border-radius:0;text-shadow:none;}
 <?php if(isset($_GET['research'])){?>
 #results{height:200px;overflow:auto;}
-h2#preview{background:#000;padding:2px 5px;color:#fff;margin:1em 0 0 0;font-weight:bold;-moz-box-shadow:none;-moz-border-radius:0;-webkit-border-radius:0;text-shadow:none;}
 iframe{display:block;width:100%;border:none;margin:0 0 1em 0;height:400px;}
-#results ul{margin-right:.5em;}
+#results ul,#results h2{margin-right:.5em;}
 <?php }?>
 </style>
 </head>
@@ -54,8 +61,8 @@ iframe{display:block;width:100%;border:none;margin:0 0 1em 0;height:400px;}
 <?php }?>
 <?php if(isset($_GET['research'])){?>
   <p class="smallinfo">This is GooHooBi in research mode. If you click on links in the results the page will open in the same interface.</p>
+  <h2 id="resultsheader">Search results</h2>
 <?php }?>
-
     <div id="results">
     <?php if(isset($_GET['search'])){
       include('goohoobi.php');
@@ -93,9 +100,7 @@ goohoobi = function(){
     doSearch();
     return false;
   }
-  return {
-    se:seed
-  }
+  return {se:seed}
 }();
 </script>
 </body>

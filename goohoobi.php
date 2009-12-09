@@ -1,3 +1,10 @@
+/*
+  GooHooBi API by Christian Heilmann
+  Homepage: http://github.com/codepo8/GooHooBi
+  Copyright (c)2009,2010 Christian Heilmann
+  Code licensed under the BSD License:
+  http://wait-till-i.com/license.txt
+*/
 <?php if(isset($_GET['json'])){
   header('content-type:text/javascript');
   echo 'goohoobi.se({"result":"';
@@ -76,7 +83,6 @@ if($data->query){
   $out = preg_replace("/<a /",'<a target="fr" ',$out);
 }?>
 <?php if(isset($_GET['json'])){
-
   echo addslashes($out);
   echo '"})';
 } else {
