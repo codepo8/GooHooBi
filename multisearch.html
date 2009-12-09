@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+ "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">  
+  <title>Multisearch demo!</title>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
+  <link rel="stylesheet" href="http://yui.yahooapis.com/2.7.0/build/base/base.css" type="text/css">
+</head>
+<body>
+<div id="doc" class="yui-t7">
+  <div id="hd" role="banner"><h1>Multisearch demo!</h1></div>
+  <div id="bd" role="main">
+    <form action="" method="get" accept-charset="utf-8" id="fm">
+      <div>
+        <label for="search">Search:</label>
+        <input type="text" name="search" value="" id="search">
+        <input type="submit" value="Make it so!"> 
+      </div>
+    </form>
+       <div class="yui-gb">
+         <div class="yui-u first" id="google"></div>
+         <div class="yui-u" id="bing"></div>
+         <div class="yui-u" id="yahoo"></div>
+       </div>
+  </div>
+  <div id="ft" role="contentinfo"><p></p></div>
+</div>
+<script type="text/javascript" charset="utf-8">
+  function mysearch(o){
+    var google = o.query.results.results[0];
+    var bing = o.query.results.results[1];
+    var yahoo = o.query.results.results[2];
+    var googleout = '<h2>Google</h2><ul>';
+    for(var i=0,j=google.results.length;i<j;i++){
+      var cur = google.results[i];
+      googleout+='<li><h3><a href="'+cur.url+'">'+cur.titleNoFormatting+'</a></h3><p>'+cur.content+'<span>('+cur.visibleUrl+')</span></p></li>';
+    }
+    googleout += '</ul>'
+    document.getElementById('google').innerHTML = googleout;
+
+    var bingout = '<h2>Bing</h2><ul>';
+    for(var i=0,j=bing.WebResult.length;i<j;i++){
+      var cur = bing.WebResult[i];
+      bingout+='<li><h3><a href="'+cur.Url+'">'+cur.Title+'</a></h3><p>'+cur.Description+'<span>('+cur.DisplayUrl+')</span></p></li>';
+    }
+    bingout += '</ul>'
+    document.getElementById('bing').innerHTML = bingout;
+
+    var yahooout = '<h2>Bing</h2><ul>';
+    for(var i=0,j=yahoo.result.length;i<j;i++){
+      var cur = yahoo.result[i];
+      yahooout+='<li><h3><a href="'+cur.clickurl+'">'+cur.title+'</a></h3><p>'+cur.abstract+'<span>('+cur.dispurl+')</span></p></li>';
+    }
+    bingout += '</ul>'
+    document.getElementById('yahoo').innerHTML = yahooout;
+}
+document.getElementById('fm').onsubmit = function(){
+  var query = document.getElementById('search').value;
+  var api = 'http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20query.multi%20where%20queries%3D\'select%20content%2Curl%2CtitleNoFormatting%2CvisibleUrl%20from%20google.search%20where%20q%3D%22'+query+'%22%3Bselect%20Title%2CDescription%2CUrl%2CDisplayUrl%20from%20microsoft.bing.web%20where%20query%3D%22'+query+'%22%3Bselect%20abstract%2Cclickurl%2Cdispurl%2Ctitle%20from%20search.web%20where%20query%3D%22'+query+'%22\'&format=json&diagnostics=false&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=mysearch';
+  var s = document.createElement('script');
+  s.setAttribute('src',api);
+  document.getElementsByTagName('head')[0].appendChild(s);
+  return false;
+}
+</script>
+</body>
+</html>
+
