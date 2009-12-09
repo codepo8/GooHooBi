@@ -103,20 +103,5 @@ goohoobi = function(){
   return {se:seed}
 }();
 </script>
-
-<!-- Start of StatCounter Code -->
-<script type="text/javascript">
-var sc_project=968400,sc_invisible=1,sc_partition=46,
-    sc_click_stat=1,sc_security="55a9fb8f",sc_text=2; 
-</script>
-<script type="text/javascript"
-src="http://www.statcounter.com/counter/counter.js"></script><noscript><div
-class="statcounter"><a title="iweb stats"
-href="http://www.statcounter.com/iweb/" target="_blank"><img
-class="statcounter"
-src="http://c.statcounter.com/968400/0/55a9fb8f/1/"
-alt="iweb stats" ></a></div></noscript>
-<!-- End of StatCounter Code -->
-
 </body>
 </html>
