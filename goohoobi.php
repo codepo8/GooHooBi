@@ -72,10 +72,13 @@ if($data->query){
 }
 ?>
 <?php }?>
+<?php if(isset($_GET['research'])){
+  $out = preg_replace("/<a /",'<a target="fr" ',$out);
+}?>
 <?php if(isset($_GET['json'])){
+
   echo addslashes($out);
   echo '"})';
 } else {
   echo $out;
 }?>
-
