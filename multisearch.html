@@ -47,7 +47,7 @@
     bingout += '</ul>'
     document.getElementById('bing').innerHTML = bingout;
 
-    var yahooout = '<h2>Bing</h2><ul>';
+    var yahooout = '<h2>Yahoo</h2><ul>';
     for(var i=0,j=yahoo.result.length;i<j;i++){
       var cur = yahoo.result[i];
       yahooout+='<li><h3><a href="'+cur.clickurl+'">'+cur.title+'</a></h3><p>'+cur.abstract+'<span>('+cur.dispurl+')</span></p></li>';
